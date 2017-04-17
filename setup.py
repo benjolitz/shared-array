@@ -20,6 +20,7 @@ from distutils.core import setup, Extension
 from glob import glob
 from os import path
 import numpy
+import platform
 
 # Convert a file to reStructuredText with pypandoc, when available,
 # otherwise return the raw file.
@@ -30,6 +31,11 @@ def convert_to_rst(filename):
 
     except ImportError:
         return open(filename).read()
+
+
+libraries = ['rt']
+if platform.system() == 'Darwin':
+    libraries[:] = []
 
 setup(name    = 'SharedArray',
       version = '2.0.2',
@@ -63,6 +69,6 @@ setup(name    = 'SharedArray',
       ext_modules  = [
           Extension('SharedArray',
                     glob(path.join('.', 'src', '*.c')),
-                    libraries = [ 'rt' ],
+                    libraries = libraries,
                     include_dirs=[numpy.get_include()])
       ])
